@@ -1,0 +1,16 @@
+FROM node:9.11.1-alpine
+
+WORKDIR /var/www
+
+RUN mkdir -p /var/www
+COPY ./package*.json /var/www/
+
+RUN apk --update --no-cache --virtual build-dependencies add \
+        make \
+        g++ \
+        python \
+        libpng-dev \
+        bash \
+    && yarn install \
+    && npm rebuild node-sass --force \
+    && apk del build-dependencies
