@@ -1,0 +1,18 @@
+FROM alpine:3.5
+
+ADD ./docker/sphinx/sphinx.conf /etc/sphinxsearch/sphinx.conf
+
+RUN apk --update add sphinx bash \
+  && mkdir -p /var/lib/sphinxsearch \
+  && mkdir -p /var/lib/sphinxsearch/data \
+  && mkdir -p /var/log/sphinxsearch \
+  && mkdir -p /var/run/sphinxsearch
+
+ADD docker/sphinx/indexandsearch.sh /
+RUN chmod a+x indexandsearch.sh
+ADD docker/sphinx/searchd.sh /
+RUN chmod a+x searchd.sh
+
+EXPOSE 9306
+
+ENTRYPOINT ["./indexandsearch.sh"]
